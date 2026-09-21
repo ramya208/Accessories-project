@@ -1,0 +1,74 @@
+ {% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Login</title>
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <h2>Welcome Back</h2>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+            >
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <p>
+            Don't have an account?
+
+            <a href="{% url 'signup' %}">
+                Signup
+            </a>
+        </p>
+
+    </div>
+    {% comment %} {% if success %}
+<script>
+    localStorage.setItem("access", "{{ access_token }}");
+    localStorage.setItem("refresh", "{{ refresh_token }}");
+
+    window.location.href = "/products/";
+</script>
+{% endif %} {% endcomment %}
+{% if success %}
+<script>
+    const accessToken = "{{ access_token|escapejs }}";
+    const refreshToken = "{{ refresh_token|escapejs }}";
+
+    localStorage.setItem("access", accessToken);
+    localStorage.setItem("refresh", refreshToken);
+
+    alert("Token saved!");
+
+    window.location.href = "/products/";
+</script>
+{% endif %}
+</body>
+</html>

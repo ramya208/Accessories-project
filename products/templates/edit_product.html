@@ -1,0 +1,506 @@
+{% comment %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/add_product.css' %}">
+
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <h1>Edit Product</h1>
+
+        <form id="editProductForm"
+              enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+
+            <label>
+                Product Name
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                value="{{ product.name }}"
+                required
+            >
+
+
+            <label>
+                Price
+            </label>
+
+            <input
+                type="number"
+                name="price"
+                value="{{ product.price }}"
+                step="0.01"
+                required
+            >
+
+
+            <label>
+                Product Image
+            </label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+            >
+
+
+            {% if product.image %}
+
+                <img
+                    src="{{ product.image.url }}"
+                    width="150"
+                >
+
+            {% endif %}
+
+
+            <button type="submit">
+                Update Product
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <script>
+
+        document
+            .getElementById("editProductForm")
+            .addEventListener(
+                "submit",
+                async function(event) {
+
+                    event.preventDefault();
+
+
+                    const formData =
+                        new FormData(this);
+
+
+                    const csrfToken =
+                        document.querySelector(
+                            "[name=csrfmiddlewaretoken]"
+                        ).value;
+
+
+                    const response =
+                        await fetch(
+                            "/api/products/{{ product.id }}/",
+                            {
+                                method: "PUT",
+
+                                body: formData,
+
+                                headers: {
+                                    "X-CSRFToken":
+                                        csrfToken
+                                }
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (response.ok) {
+
+                        alert(
+                            "Product updated successfully!"
+                        );
+
+                        window.location.href =
+                            "/products/";
+
+                    } else {
+
+                        alert(
+                            JSON.stringify(data)
+                        );
+
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html> {% endcomment %}
+{% comment %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/add_product.css' %}">
+
+</head>
+
+
+<body>
+
+    <div class="form-container">
+
+        <h1>Edit Product</h1>
+
+
+        <form id="editProductForm">
+
+            {% csrf_token %}
+
+
+            <label>
+                Product Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                value="{{ product.name }}"
+                required
+            >
+
+
+            <label>
+                Price
+            </label>
+
+            <input
+                type="number"
+                id="price"
+                value="{{ product.price }}"
+                step="0.01"
+                required
+            >
+
+
+            <label>
+                Product Image
+            </label>
+
+            <input
+                type="file"
+                id="image"
+                accept="image/*"
+            >
+
+
+            {% if product.image %}
+
+                <p>
+                    Current Image:
+                </p>
+
+                <img
+                    src="{{ product.image.url }}"
+                    width="150"
+                    alt="{{ product.name }}"
+                >
+
+            {% endif %}
+
+
+            <button type="submit">
+                Update Product
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <script>
+
+        document
+            .getElementById("editProductForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+
+                const name =
+                    document.getElementById("name").value;
+
+                const price =
+                    document.getElementById("price").value;
+
+                const image =
+                    document.getElementById("image").files[0];
+
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "name",
+                    name
+                );
+
+
+                formData.append(
+                    "price",
+                    price
+                );
+
+
+                if (image) {
+
+                    formData.append(
+                        "image",
+                        image
+                    );
+
+                }
+
+
+                const csrfToken =
+                    document.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    ).value;
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/api/products/{{ product.id }}/",
+                            {
+                                method: "PUT",
+
+                                body: formData,
+
+                                headers: {
+                                    "X-CSRFToken":
+                                        csrfToken,
+                                         "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg5ODk3NTkyLCJpYXQiOjE3ODk4OTcyOTIsImp0aSI6IjA4YjlkZjg4ODE3OTQ2NjBiZGEwOWI3MGRlYzJiMDdhIiwidXNlcl9pZCI6IjEyIn0.EI_p7xUZxtafZhR9iVPt-F0vrPao6v5_-Dm6EC5KqrA`
+                                }
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (response.ok) {
+
+                        alert(
+                            "Product updated successfully!"
+                        );
+
+
+                        window.location.href =
+                            "/products/";
+
+                    } else {
+
+                        alert(
+                            "Update failed: " +
+                            JSON.stringify(data)
+                        );
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "Error: " +
+                        error.message
+                    );
+
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html> {% endcomment %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/add_product.css' %}">
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <h1>Edit Product</h1>
+
+        <form id="editProductForm">
+
+            {% csrf_token %}
+
+            <label for="name">Product Name</label>
+            <input
+                type="text"
+                id="name"
+                value="{{ product.name }}"
+                required
+            >
+
+            <label for="price">Price</label>
+            <input
+                type="number"
+                id="price"
+                value="{{ product.price }}"
+                step="0.01"
+                required
+            >
+
+            <label for="image">Product Image</label>
+            <input
+                type="file"
+                id="image"
+                accept="image/*"
+            >
+
+            {% if product.image %}
+                <p>Current Image:</p>
+
+                <img
+                    src="{{ product.image.url }}"
+                    width="150"
+                    alt="{{ product.name }}"
+                >
+            {% endif %}
+
+            <button type="submit">
+                Update Product
+            </button>
+
+        </form>
+
+    </div>
+
+    <script>
+        document
+            .getElementById("editProductForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+                const name =
+                    document.getElementById("name").value;
+
+                const price =
+                    document.getElementById("price").value;
+
+                const image =
+                    document.getElementById("image").files[0];
+
+                const formData = new FormData();
+
+                formData.append("name", name);
+                formData.append("price", price);
+
+                // Image select pannirundha mattum send pannum
+                if (image) {
+                    formData.append("image", image);
+                }
+
+                const csrfToken =
+                    document.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    ).value;
+
+                // Local storage-la irukkura access token
+                const token =
+                    localStorage.getItem("access");
+
+                if (!token) {
+                    alert("Token not found. Please login again.");
+                    window.location.href = "/login/";
+                    return;
+                }
+
+                try {
+                    const response = await fetch(
+                        "/api/products/{{ product.id }}/",
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "X-CSRFToken": csrfToken,
+                                "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg5OTczMjIxLCJpYXQiOjE3ODk5Njk2MjEsImp0aSI6Ijc0YzFkMTc5ZGFhMzRhOTdhNWU3M2RjZGIwMjc5NGFiIiwidXNlcl9pZCI6IjEyIn0.4gH0OB-qUaRk1GzymFijhnIq0xZkaF5Xx4vwVtgk9s0`
+                            },
+
+                            body: formData
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert("Product updated successfully!");
+
+                        window.location.href = "/products/";
+                    } else {
+                        alert(
+                            "Update failed: " +
+                            JSON.stringify(data)
+                        );
+                    }
+
+                } catch (error) {
+                    console.error(error);
+
+                    alert("Error: " + error.message);
+                }
+
+            });
+    </script>
+
+</body>
+</html>
