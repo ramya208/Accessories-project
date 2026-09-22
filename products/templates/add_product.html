@@ -111,7 +111,7 @@
 
 </html> {% endcomment %} 
 
-{% load static %}
+{% comment %} {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -223,4 +223,72 @@
 
 </body>
 
-</html>
+</html> {% endcomment %}
+<script>
+
+    document.getElementById("productForm").addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+            const form = event.target;
+
+            const formData = new FormData(form);
+
+            // Get JWT access token
+            const token = localStorage.getItem("access");
+
+            // Check token
+            if (!token) {
+                alert("Token not found. Please login again.");
+                window.location.href = "/login/";
+                return;
+            }
+
+            try {
+
+                const response = await fetch(
+                    "/api/products/",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "X-CSRFToken":
+                                document.querySelector(
+                                    "[name=csrfmiddlewaretoken]"
+                                ).value,
+
+                            "Authorization": "Bearer " + token
+                        },
+
+                        body: formData
+                    }
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+
+                    alert("Product created successfully!");
+
+                    window.location.href = "/products/";
+
+                } else {
+
+                    alert(JSON.stringify(data));
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("Something went wrong. Please try again.");
+
+            }
+
+        }
+    );
+
+</script>
