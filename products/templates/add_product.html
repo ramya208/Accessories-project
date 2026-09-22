@@ -111,7 +111,7 @@
 
 </html> {% endcomment %} 
 
-{% comment %} {% load static %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -173,7 +173,7 @@
     </div>
 
 
-    <script>
+    {% comment %} <script>
 
         document.getElementById("productForm").addEventListener(
             "submit",
@@ -219,12 +219,8 @@
             }
         );
 
-    </script>
-
-</body>
-
-</html> {% endcomment %}
-<script>
+    </script> {% endcomment %}
+    <script>
 
     document.getElementById("productForm").addEventListener(
         "submit",
@@ -292,3 +288,7 @@
     );
 
 </script>
+
+</body>
+
+</html>
