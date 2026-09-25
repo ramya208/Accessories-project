@@ -45,14 +45,31 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #     return render(request, "products.html", {
 #         "products": products
 #     })
+# def product_list(request):
+
+#     products = Product.objects.all()
+
+#     return render(request, "products.html", {
+#         "products": products
+#     })
 def product_list(request):
 
-    products = Product.objects.all()
+    if request.user.is_staff:
+        # Admin → அவருடைய products மட்டும்
+        products = Product.objects.filter(
+            owner=request.user
+        )
+    else:
+        # User → எல்லா admin products
+        products = Product.objects.all()
 
-    return render(request, "products.html", {
-        "products": products
-    })
-
+    return render(
+        request,
+        "products.html",
+        {
+            "products": products
+        }
+    )
 # def signup_view(request):
 
 #     if request.method == "POST":
@@ -338,18 +355,35 @@ class ProductAPI(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
 
-    def get(self, request):
+    # def get(self, request):
 
-        # products = Product.objects.all()
-        # products = Product.objects.filter(owner=request.user)
+    #     # products = Product.objects.all()
+    #     # products = Product.objects.filter(owner=request.user)
+    #     products = Product.objects.all()
+
+    #     serializer = ProductSerializer(
+    #         products,
+    #         many=True
+    #     )
+
+    #     return Response(serializer.data)
+def get(self, request):
+
+    if request.user.is_staff:
+        # Admin → அவருடைய products மட்டும்
+        products = Product.objects.filter(
+            owner=request.user
+        )
+    else:
+        # User → எல்லா products
         products = Product.objects.all()
 
-        serializer = ProductSerializer(
-            products,
-            many=True
-        )
+    serializer = ProductSerializer(
+        products,
+        many=True
+    )
 
-        return Response(serializer.data)
+    return Response(serializer.data)
 
     def post(self, request):
 
