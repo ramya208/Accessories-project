@@ -466,7 +466,8 @@ def add_product(request):
         Product.objects.create(
             name=name,
             price=price,
-            image=image
+            image=image,
+            owner=request.user
         )
 
         return redirect("products")
