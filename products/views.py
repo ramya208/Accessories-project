@@ -323,7 +323,8 @@ class ProductAPI(APIView):
 
     def get(self, request):
 
-        products = Product.objects.all()
+        # products = Product.objects.all()
+        products = Product.objects.filter(owner=request.user)
 
         serializer = ProductSerializer(
             products,
@@ -345,7 +346,8 @@ class ProductAPI(APIView):
         )
 
         if serializer.is_valid():
-            serializer.save()
+            # serializer.save()
+            serializer.save(owner=request.user)
 
             return Response(
                 serializer.data,
@@ -375,7 +377,11 @@ class ProductDetailAPI(APIView):
 
         try:
 
-            product = Product.objects.get(id=id)
+            # product = Product.objects.get(id=id)
+            product = Product.objects.get(
+    id=id,
+    owner=request.user
+)
 
         except Product.DoesNotExist:
 
@@ -419,7 +425,11 @@ class ProductDetailAPI(APIView):
     def delete(self, request, id):
 
         try:
-            product = Product.objects.get(id=id)
+            # product = Product.objects.get(id=id)
+            product = Product.objects.get(
+    id=id,
+    owner=request.user
+)
 
         except Product.DoesNotExist:
             return Response(
