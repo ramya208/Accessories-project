@@ -343,47 +343,98 @@ def login_view(request):
 #         })
 
 #         return render(request, "login.html")
-class ProductAPI(APIView):
+# class ProductAPI(APIView):
 
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+#     # authentication_classes = [TokenAuthentication]
+#     # permission_classes = [IsAuthenticated]
+
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+
+
+#     parser_classes = [MultiPartParser, FormParser]
+
+
+#     # def get(self, request):
+
+#     #     # products = Product.objects.all()
+#     #     # products = Product.objects.filter(owner=request.user)
+#     #     products = Product.objects.all()
+
+#     #     serializer = ProductSerializer(
+#     #         products,
+#     #         many=True
+#     #     )
+
+#     #     return Response(serializer.data)
+# def get(self, request):
+
+#     if request.user.is_staff:
+#         # Admin → அவருடைய products மட்டும்
+#         products = Product.objects.filter(
+#             owner=request.user
+#         )
+#     else:
+#         # User → எல்லா products
+#         products = Product.objects.all()
+
+#     serializer = ProductSerializer(
+#         products,
+#         many=True
+#     )
+
+#     return Response(serializer.data)
+
+#     def post(self, request):
+
+#         if not request.user.is_staff:
+#             return Response(
+#                 {"error": "Only admin can add product"},
+#                 status=status.HTTP_403_FORBIDDEN
+#             )
+
+#         serializer = ProductSerializer(
+#             data=request.data
+#         )
+
+#         if serializer.is_valid():
+#             # serializer.save()
+#             serializer.save(owner=request.user)
+
+#             return Response(
+#                 serializer.data,
+#                 status=status.HTTP_201_CREATED
+#             )
+
+#         return Response(
+#             serializer.errors,
+#             status=status.HTTP_400_BAD_REQUEST
+#         )
+
+class ProductAPI(APIView):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-
     parser_classes = [MultiPartParser, FormParser]
 
+    def get(self, request):
 
-    # def get(self, request):
+        if request.user.is_staff:
+            # Admin → அவருடைய products மட்டும்
+            products = Product.objects.filter(
+                owner=request.user
+            )
+        else:
+            # User → எல்லா products
+            products = Product.objects.all()
 
-    #     # products = Product.objects.all()
-    #     # products = Product.objects.filter(owner=request.user)
-    #     products = Product.objects.all()
-
-    #     serializer = ProductSerializer(
-    #         products,
-    #         many=True
-    #     )
-
-    #     return Response(serializer.data)
-def get(self, request):
-
-    if request.user.is_staff:
-        # Admin → அவருடைய products மட்டும்
-        products = Product.objects.filter(
-            owner=request.user
+        serializer = ProductSerializer(
+            products,
+            many=True
         )
-    else:
-        # User → எல்லா products
-        products = Product.objects.all()
 
-    serializer = ProductSerializer(
-        products,
-        many=True
-    )
-
-    return Response(serializer.data)
+        return Response(serializer.data)
 
     def post(self, request):
 
@@ -398,8 +449,10 @@ def get(self, request):
         )
 
         if serializer.is_valid():
-            # serializer.save()
-            serializer.save(owner=request.user)
+
+            serializer.save(
+                owner=request.user
+            )
 
             return Response(
                 serializer.data,
