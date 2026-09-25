@@ -385,7 +385,7 @@ def get(self, request):
 
     return Response(serializer.data)
 
-def post(self, request):
+    def post(self, request):
 
         if not request.user.is_staff:
             return Response(
