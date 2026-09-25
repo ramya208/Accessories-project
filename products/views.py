@@ -36,11 +36,18 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #     return render(request, "products.html", {
 #         "products": products
 #     })
+# def product_list(request):
+
+#     products = Product.objects.filter(
+#         owner=request.user
+#     )
+
+#     return render(request, "products.html", {
+#         "products": products
+#     })
 def product_list(request):
 
-    products = Product.objects.filter(
-        owner=request.user
-    )
+    products = Product.objects.all()
 
     return render(request, "products.html", {
         "products": products
@@ -334,7 +341,8 @@ class ProductAPI(APIView):
     def get(self, request):
 
         # products = Product.objects.all()
-        products = Product.objects.filter(owner=request.user)
+        # products = Product.objects.filter(owner=request.user)
+        products = Product.objects.all()
 
         serializer = ProductSerializer(
             products,
