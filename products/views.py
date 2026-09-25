@@ -29,7 +29,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #     })
 def product_list(request):
 
-    products = Product.objects.all()
+    # products = Product.objects.all()
+     products = Product.objects.filter(
+        owner=request.user
 
     return render(request, "products.html", {
         "products": products
