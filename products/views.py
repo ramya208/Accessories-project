@@ -504,24 +504,33 @@ class ProductDetailAPI(APIView):
 # def add_product(request):
 
 #     return render(request, "add_product.html")    
+# def add_product(request):
+
+#     if not request.user.is_staff:
+#         return redirect("products")
+
+#     if request.method == "POST":
+
+#         name = request.POST.get("name")
+#         price = request.POST.get("price")
+#         image = request.FILES.get("image")
+
+#         Product.objects.create(
+#             name=name,
+#             price=price,
+#             image=image,
+#             owner=request.user
+#         )
+
+#         return redirect("products")
+
+#     return render(
+#         request,
+#         "add_product.html"
+#     )
 def add_product(request):
 
     if not request.user.is_staff:
-        return redirect("products")
-
-    if request.method == "POST":
-
-        name = request.POST.get("name")
-        price = request.POST.get("price")
-        image = request.FILES.get("image")
-
-        Product.objects.create(
-            name=name,
-            price=price,
-            image=image,
-            owner=request.user
-        )
-
         return redirect("products")
 
     return render(
